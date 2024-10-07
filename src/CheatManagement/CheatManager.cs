@@ -6,8 +6,9 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
 {
     public class CheatManager
     {
-        private const int TotalInventorySlots = 32;
+        private const int NegInventoryEntries = 7;
         private const int UsedInventorySlots = 18;
+        private const int TotalInventorySlots = UsedInventorySlots + NegInventoryEntries + 13;
         private static int s_xmlID = 0;
         private static int s_groupCount = 1;
         private CheatGroup _groupMaster;
@@ -42,6 +43,13 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             FLAG_BIG_KEY,
             FLAG_MOON_PEARL,
             //Inventory Groups
+            INV_SLOT_NEG_7,
+            INV_SLOT_NEG_6,
+            INV_SLOT_NEG_5,
+            INV_SLOT_NEG_4,
+            INV_SLOT_NEG_3,
+            INV_SLOT_NEG_2,
+            INV_SLOT_NEG_1,
             INV_SLOT_0,
             INV_SLOT_1,
             INV_SLOT_2,
@@ -69,6 +77,13 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             G_PLAYER_INFO,
             G_FLAGS,
             G_INVENTORY,
+            G_INV_SLOT_NEG_7,
+            G_INV_SLOT_NEG_6,
+            G_INV_SLOT_NEG_5,
+            G_INV_SLOT_NEG_4,
+            G_INV_SLOT_NEG_3,
+            G_INV_SLOT_NEG_2,
+            G_INV_SLOT_NEG_1,
             G_INV_SLOT_0,
             G_INV_SLOT_1,
             G_INV_SLOT_2,
@@ -97,7 +112,6 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             INC_VAL,
             MAX
         };
-
         public CheatManager()
         {
             _groupMaster = new CheatGroup(MainWindow.GameVersion + " (Current)");
@@ -108,23 +122,31 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             _groupMaster.AddChildGroup(groupFlags, GroupList.G_FLAGS);
             _groupMaster.AddChildGroup(groupInventory, GroupList.G_INVENTORY);
 
-            CheatGroup groupInvSlot0 = new CheatGroup("Slot 0 (Starting Slot For Bag Upgrade)");
-            groupInventory.AddChildGroup(groupInvSlot0, GroupList.G_INV_SLOT_0);
-            CheatGroup groupInvSlot1 = new CheatGroup("Slot 1 (Starting Slot For No Bag Upgrade)");
-            groupInventory.AddChildGroup(groupInvSlot1, GroupList.G_INV_SLOT_1);
+            Dictionary<int, CheatGroup> groupInvSlots = new Dictionary<int, CheatGroup>();
 
-            CheatGroup[] groupInvSlots = new CheatGroup[TotalInventorySlots];
-            groupInvSlots[0] = groupInvSlot0;
-            groupInvSlots[1] = groupInvSlot1;
-
-            for (var i = 2; i < TotalInventorySlots; i++)
+            for (var i = -NegInventoryEntries; i <= TotalInventorySlots - NegInventoryEntries; i++) // Starts from Slot -[NegInventoryEntries]
             {
                 string usedString = string.Empty;
-                if (i >= UsedInventorySlots)
-                    usedString = " (Unused)";
-                CheatGroup thisCheatGroup = new CheatGroup(string.Format("Slot {0}" + usedString, i));
-                groupInvSlots[i] = thisCheatGroup;
-                groupInventory.AddChildGroup(groupInvSlots[i], GroupList.G_INV_SLOT_0 + i);
+                switch (i)
+                {
+                    case 0:
+                        CheatGroup groupInvSlot0 = new CheatGroup("Slot 0 (Starting Slot For Bag Upgrade)");
+                        groupInventory.AddChildGroup(groupInvSlot0, GroupList.G_INV_SLOT_0);
+                        groupInvSlots[0] = groupInvSlot0;
+                        break;
+                    case 1:
+                        CheatGroup groupInvSlot1 = new CheatGroup("Slot 1 (Starting Slot For No Bag Upgrade)");
+                        groupInventory.AddChildGroup(groupInvSlot1, GroupList.G_INV_SLOT_1);
+                        groupInvSlots[1] = groupInvSlot1;
+                        break;
+                    default:
+                        if (i >= UsedInventorySlots)
+                            usedString = " (Unused)";
+                        CheatGroup thisCheatGroup = new CheatGroup(string.Format("Slot {0}" + usedString, i));
+                        groupInvSlots[i] = thisCheatGroup;
+                        groupInventory.AddChildGroup(groupInvSlots[i], GroupList.G_INV_SLOT_0 + i);
+                        break;
+                }
             }
 
             /// Define the skeleton cheats to base all the other codes off of
@@ -160,7 +182,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             rupeesAddress.AddOffset(0x5C0);
 
             // Has Pendant of Health
-            
+
             Cheat hasPendantOfHealth = new Cheat("HasPendantOfHealth", 0x0137EEF0, VarType.DOUBLE);
             hasPendantOfHealth.AddOffset(0x10);
             hasPendantOfHealth.AddOffset(0x4B0);
@@ -205,7 +227,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             bombBagBombCount.AddOffset(0x180);
 
             // Inventory Slot 2 Item Quantity
-            
+
             Cheat slot2Quantity = new Cheat("Slot 2 Item Amount (Quantity)", 0x0137EEF0, VarType.DOUBLE);
             slot2Quantity.AddOffset(0x10);
             slot2Quantity.AddOffset(0x4B0);
@@ -226,8 +248,10 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
 
             Cheat slot2StorageID = new Cheat("Slot 2 Storage ID", slot2Quantity, -0x20, VarType.DOUBLE);
             Cheat slot2Enabled = new Cheat("Slot 2 Enabled", slot2Quantity, -0x10, VarType.DOUBLE);
-            Cheat slot2ID = new Cheat("Slot 2 Item Class (ID)", slot2Quantity, 0x20, VarType.FOUR_BYTE);
-            slot2ID.EnableInvDropdownList();
+            Cheat slot2IDDoub = new Cheat("Slot 2 Item Class (ID, Double [Adds to Inventory]", slot2Quantity, 0x20, VarType.DOUBLE);
+            slot2IDDoub.EnableInvDropdownList();
+            Cheat slot2IDFourByte = new Cheat("Slot 2 Item Class (ID, 4 Byte [Modifies Inventory])", slot2Quantity, 0x20, VarType.FOUR_BYTE);
+            slot2IDFourByte.EnableInvDropdownList();
             Cheat slot2SecIDDoub = new Cheat("Slot 2 Item Index (Secondary ID, Double)", slot2Quantity, 0x10, VarType.DOUBLE);
             Cheat slot2SecIDFourByte = new Cheat("Slot 2 Item Index (Secondary ID, 4 Byte)", slot2Quantity, 0x10, VarType.FOUR_BYTE);
             Cheat slot2SecIDFloat = new Cheat("Slot 2 Item Index (Secondary ID, Float)", slot2Quantity, 0x10, VarType.FLOAT);
@@ -292,38 +316,43 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             groupFlags.AddCheatEntry(hasMoonPearl, CheatList.FLAG_MOON_PEARL);
 
             // Inventory Slots (all 17)
-            Cheat[] inventoryStorageID = new Cheat[TotalInventorySlots];
-            Cheat[] inventoryEnabled = new Cheat[TotalInventorySlots];
-            Cheat[] inventoryQuants = new Cheat[TotalInventorySlots];
-            Cheat[] inventoryIDs = new Cheat[TotalInventorySlots];
-            Cheat[] inventorySecIDsDoub = new Cheat[TotalInventorySlots];
-            Cheat[] inventorySecIDsFourByte = new Cheat[TotalInventorySlots];
-            Cheat[] inventorySecIDsFloat = new Cheat[TotalInventorySlots];
+            Dictionary<int, Cheat> inventoryStorageID = new Dictionary<int, Cheat>();
+            Dictionary<int, Cheat> inventoryEnabled = new Dictionary<int, Cheat>();
+            Dictionary<int, Cheat> inventoryQuants = new Dictionary<int, Cheat>();
+            Dictionary<int, Cheat> inventoryIDsDoub = new Dictionary<int, Cheat>();
+            Dictionary<int, Cheat> inventoryIDsFourByte = new Dictionary<int, Cheat>();
+            Dictionary<int, Cheat> inventorySecIDsDoub = new Dictionary<int, Cheat>();
+            Dictionary<int, Cheat> inventorySecIDsFourByte = new Dictionary<int, Cheat>();
+            Dictionary<int, Cheat> inventorySecIDsFloat = new Dictionary<int, Cheat>();
 
             inventoryStorageID[2] = slot2StorageID;
             inventoryEnabled[2] = slot2Enabled;
             inventoryQuants[2] = slot2Quantity;
-            inventoryIDs[2] = slot2ID;
+            inventoryIDsDoub[2] = slot2IDDoub;
+            inventoryIDsFourByte[2] = slot2IDFourByte;
             inventorySecIDsDoub[2] = slot2SecIDDoub;
             inventorySecIDsFourByte[2] = slot2SecIDFourByte;
             inventorySecIDsFloat[2] = slot2SecIDFloat;
 
-            int offset = 0x80;
-            for (int slotID = 0; slotID < TotalInventorySlots; slotID++)
+            int slotOffsetCount = 2 + NegInventoryEntries;
+            int offset = 0x40 * slotOffsetCount; // i = 0
+            for (int slotID = -NegInventoryEntries; slotID <= TotalInventorySlots - NegInventoryEntries; slotID++) // Start from -[NegInventoryEntries]
             {
                 if (slotID != 2)
                 {
-                    inventoryStorageID[slotID] = new Cheat(string.Format("Slot {0} Storage ID", slotID), slot2Quantity, offset - 0x20, VarType.DOUBLE);
-                    groupInvSlots[slotID].AddCheatEntry(inventoryStorageID[slotID], CheatList.UNDEFINED);
                     inventoryEnabled[slotID] = new Cheat(string.Format("Slot {0} Enabled", slotID), slot2Quantity, offset - 0x10, VarType.DOUBLE);
                     groupInvSlots[slotID].AddCheatEntry(inventoryEnabled[slotID], CheatList.UNDEFINED);
 
                     inventoryQuants[slotID] = new Cheat(string.Format("Slot {0} Item Amount (Quantity)", slotID), slot2Quantity, offset, VarType.DOUBLE);
                     groupInvSlots[slotID].AddCheatEntry(inventoryQuants[slotID], CheatList.INV_SLOT_0 + slotID);
 
-                    inventoryIDs[slotID] = new Cheat(string.Format("Slot {0} Item Class (ID)", slotID), slot2Quantity, offset + 0x20, VarType.FOUR_BYTE);
-                    inventoryIDs[slotID].EnableInvDropdownList();
-                    groupInvSlots[slotID].AddCheatEntry(inventoryIDs[slotID], CheatList.UNDEFINED);
+                    inventoryIDsDoub[slotID] = new Cheat(string.Format("Slot {0} Item Class (ID, Double [Adds to Inventory])", slotID), slot2Quantity, offset + 0x20, VarType.DOUBLE);
+                    inventoryIDsDoub[slotID].EnableInvDropdownList();
+                    groupInvSlots[slotID].AddCheatEntry(inventoryIDsDoub[slotID], CheatList.UNDEFINED);
+
+                    inventoryIDsFourByte[slotID] = new Cheat(string.Format("Slot {0} Item Class (ID, 4 Byte [Modifies Inventory])", slotID), slot2Quantity, offset + 0x20, VarType.FOUR_BYTE);
+                    inventoryIDsFourByte[slotID].EnableInvDropdownList();
+                    groupInvSlots[slotID].AddCheatEntry(inventoryIDsFourByte[slotID], CheatList.UNDEFINED);
 
                     inventorySecIDsDoub[slotID] = new Cheat(string.Format("Slot {0} Item Index (Secondary ID, Double)", slotID), slot2Quantity, offset + 0x10, VarType.DOUBLE);
                     groupInvSlots[slotID].AddCheatEntry(inventorySecIDsDoub[slotID], CheatList.UNDEFINED);
@@ -337,7 +366,8 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
                     groupInvSlots[2].AddCheatEntry(slot2StorageID, CheatList.UNDEFINED);
                     groupInvSlots[2].AddCheatEntry(slot2Enabled, CheatList.UNDEFINED);
                     groupInvSlots[2].AddCheatEntry(slot2Quantity, CheatList.INV_SLOT_2);
-                    groupInvSlots[2].AddCheatEntry(slot2ID, CheatList.UNDEFINED);
+                    groupInvSlots[2].AddCheatEntry(slot2IDDoub, CheatList.UNDEFINED);
+                    groupInvSlots[2].AddCheatEntry(slot2IDFourByte, CheatList.UNDEFINED);
                     groupInvSlots[2].AddCheatEntry(slot2SecIDDoub, CheatList.UNDEFINED);
                     groupInvSlots[2].AddCheatEntry(slot2SecIDFourByte, CheatList.UNDEFINED);
                     groupInvSlots[2].AddCheatEntry(slot2SecIDFloat, CheatList.UNDEFINED);
