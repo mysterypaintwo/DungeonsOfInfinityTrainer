@@ -25,6 +25,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             MAGIC,
             ARROW_COUNT,
             BOMB_BAG_BOMB_COUNT,
+            EQUIPPED_ITEM_SLOT,
             EQUIPPED_TUNIC,
             EQUIPPED_SWORD,
             EQUIPPED_SHIELD,
@@ -44,6 +45,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             FLAG_BIG_KEY,
             FLAG_MOON_PEARL,
             FLAG_OIL_LAMP,
+            FLAG_INVENTORY_IS_DISABLED,
 
             //Inventory Groups
             INV_SLOT_NEG_7,
@@ -165,8 +167,22 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             xPosAddress.AddHotkey(HotkeyActions.DEC_VAL, new List<int>() { 17, 65 }, 32);
             xPosAddress.AddHotkey(HotkeyActions.INC_VAL, new List<int>() { 17, 68 }, 32);
 
-            // Rupees
 
+            Cheat inventoryIsDisabled = new Cheat("InventoryIsDisabled", 0x01385010, VarType.DOUBLE);
+            inventoryIsDisabled.AddOffset(0x160);
+            inventoryIsDisabled.AddOffset(0x68);
+            inventoryIsDisabled.AddOffset(0x78);
+            inventoryIsDisabled.AddOffset(0x48);
+            inventoryIsDisabled.AddOffset(0x10);
+            inventoryIsDisabled.AddOffset(0x7B0);
+            inventoryIsDisabled.AddOffset(0x690);
+            groupFlags.AddCheatEntry(inventoryIsDisabled, CheatList.FLAG_INVENTORY_IS_DISABLED);
+
+            /*
+            Cheat agaPauseIsDisabled = new Cheat("AgaPauseIsDisabled", xPosAddress, -0x93DCA0, VarType.FOUR_BYTE);
+            groupFlags.AddCheatEntry(agaPauseIsDisabled, CheatList.FLAG_AGA_PAUSE_IS_DISABLED);*/
+
+            // Rupees
             // v1.1.4
             Cheat rupeesAddress = new Cheat("Rupees", 0x015A4178, VarType.DOUBLE);
             rupeesAddress.AddOffset(0x808);
@@ -310,7 +326,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             // Player Status Codes
             Cheat playerMaxHealth = new Cheat("Max Health", rupeesAddress, 0x190 - 0x30, VarType.DOUBLE);
             groupPlayerInfo.AddCheatEntry(playerMaxHealth, CheatList.MAX_HEALTH);
-            Cheat playerCurrentHealth = new Cheat("CurrentHealth", rupeesAddress, 0x1A0 - 0x30, VarType.DOUBLE);
+            Cheat playerCurrentHealth = new Cheat("Current Health", rupeesAddress, 0x1A0 - 0x30, VarType.DOUBLE);
             groupPlayerInfo.AddCheatEntry(playerCurrentHealth, CheatList.CUR_HEALTH);
 
 
@@ -322,6 +338,9 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             groupPlayerInfo.AddCheatEntry(bombBagBombCount, CheatList.BOMB_BAG_BOMB_COUNT);
 
 
+
+            Cheat playerEquippedItemSlot = new Cheat("Equipped Item Slot (First slot is 7)", slot2Quantity, -0xBA0, VarType.DOUBLE);
+            groupPlayerInfo.AddCheatEntry(playerEquippedItemSlot, CheatList.EQUIPPED_ITEM_SLOT);
 
             Cheat playerEquippedTunic = new Cheat("Equipped Tunic", rupeesAddress, -0xD0, VarType.DOUBLE);
             groupPlayerInfo.AddCheatEntry(playerEquippedTunic, CheatList.EQUIPPED_TUNIC);
