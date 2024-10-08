@@ -39,7 +39,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
 12:Fairy
 13:Food
 14:Gems
-15:GemBag
+15:TreasureBag
 16:Gloves
 17:HeartPickup
 18:HeartContainer
