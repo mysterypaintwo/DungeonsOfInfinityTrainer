@@ -266,14 +266,8 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
 
             // Has Oil Lamp
             // v1.1.4
-            Cheat hasOilLamp = new Cheat("HasOilLamp", 0x01380E20, VarType.DOUBLE);
-            hasOilLamp.AddOffset(0x10);
-            hasOilLamp.AddOffset(0x4B0);
-            hasOilLamp.AddOffset(0x388);
-            hasOilLamp.AddOffset(0x80);
-            hasOilLamp.AddOffset(0x388);
-            hasOilLamp.AddOffset(0x88);
-            hasOilLamp.AddOffset(0x0);
+            //Cheat hasOilLamp = new Cheat("HasOilLamp", 0x01380E20, VarType.DOUBLE);
+            Cheat hasOilLamp = new Cheat("HasOilLamp", hasMasterKey, 0x20, VarType.DOUBLE);
 
             // Bomb Bag Bomb Count
             //Cheat bombBagBombCount = new Cheat("BombCount (After Bomb Bag)", arrowCount, 0xD5E150, VarType.DOUBLE);
@@ -362,7 +356,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             groupFlags.AddCheatEntry(hasPendantOfMagic, CheatList.FLAG_PEN_MAGIC);
             Cheat hasPendantOfProtection = new Cheat("HasPendantOfProtection", hasPendantOfHealth, 0x20, VarType.DOUBLE);
             groupFlags.AddCheatEntry(hasPendantOfProtection, CheatList.FLAG_PEN_PROTECTION);
-            Cheat hasPendantOfRevival = new Cheat("HasPendantOfRevival", hasPendantOfHealth, 0x30, VarType.DOUBLE);
+            Cheat hasPendantOfRevival = new Cheat("HasPendantOfRevival (Doesn't work! Add➜Drop➜Grab with Inventory codes. Item Class: 34, Item Index [Double]: 3)", hasPendantOfHealth, 0x30, VarType.DOUBLE);
             groupFlags.AddCheatEntry(hasPendantOfRevival, CheatList.FLAG_PEN_REVIVAL);
             Cheat hasPendantOfDirection = new Cheat("HasPendantOfDirection", hasPendantOfHealth, 0x40, VarType.DOUBLE);
             groupFlags.AddCheatEntry(hasPendantOfDirection, CheatList.FLAG_PEN_DIRECTION);
@@ -374,8 +368,8 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             groupFlags.AddCheatEntry(hasPendantOfWealth, CheatList.FLAG_PEN_WEALTH);
 
             groupFlags.AddCheatEntry(hasMasterKey, CheatList.FLAG_BIG_KEY);
-            groupFlags.AddCheatEntry(hasMoonPearl, CheatList.FLAG_MOON_PEARL);
             groupFlags.AddCheatEntry(hasOilLamp, CheatList.FLAG_OIL_LAMP);
+            groupFlags.AddCheatEntry(hasMoonPearl, CheatList.FLAG_MOON_PEARL);
 
             // Inventory Slots (all 17)
             //Dictionary<int, Cheat> inventoryStorageID = new Dictionary<int, Cheat>();
