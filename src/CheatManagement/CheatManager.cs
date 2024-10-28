@@ -194,22 +194,21 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             // v1.1.5
             Cheat hasPendantOfHealth = new Cheat("HasPendantOfHealth", 0x01394270, VarType.DOUBLE);
             hasPendantOfHealth.AddOffset(0x10);
-            hasPendantOfHealth.AddOffset(0x710);
-            hasPendantOfHealth.AddOffset(0x720);
-            hasPendantOfHealth.AddOffset(0x148);
+            hasPendantOfHealth.AddOffset(0x220);
+            hasPendantOfHealth.AddOffset(0x520);
+            hasPendantOfHealth.AddOffset(0x748);
             hasPendantOfHealth.AddOffset(0x90);
             hasPendantOfHealth.AddOffset(0xE00);
 
             // Has Master Key
             // v1.1.5
-            Cheat hasMasterKey = new Cheat("HasMasterKey", 0x01394270, VarType.DOUBLE);
-            hasMasterKey.AddOffset(0x10);
-            hasMasterKey.AddOffset(0xC00);
-            hasMasterKey.AddOffset(0x588);
-            hasMasterKey.AddOffset(0xC0);
-            hasMasterKey.AddOffset(0x388);
-            hasMasterKey.AddOffset(0x48);
-            hasMasterKey.AddOffset(0xE0);
+            Cheat hasMasterKey = new Cheat("HasMasterKey", 0x015B8F98, VarType.DOUBLE);
+            hasMasterKey.AddOffset(0x0);
+            hasMasterKey.AddOffset(0x30);
+            hasMasterKey.AddOffset(0xB80);
+            hasMasterKey.AddOffset(0x0);
+            hasMasterKey.AddOffset(0x148);
+            hasMasterKey.AddOffset(0x20);
 
             // Has Moon Pearl
             // v1.1.5
