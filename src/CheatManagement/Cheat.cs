@@ -25,53 +25,53 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
     public class Cheat
     {
         public static string InvDropDown = @"0:Quiver
-1:Arrows
-2:Bag
-3:Book
-4:BombBag
-5:Bombs
-6:Red Boomberang
-7:Bow
-8:Staff(green:0 blue:1 red:2)
-9:Cape
-10:Compass
-11:Crystals
-12:Fairy
-13:Food
-14:Gems
-15:TreasureBag
-16:Gloves
-17:HeartPickup
-18:HeartContainer
-19:Hookshot
-20:SmallKey
-21:MasterKey
-22:KingsKey
-23:Kinstone
-24:Lantern
-25:Pazo'sLetter
-26:SmallMagicPickup
-27:HalfMagic
-28:Map
-29:Bombos
-30:Mirror
-31:MoonPearl
-32:Mushroom
-33:Orbs
-34:Pendants
-35:CocaCola
-36:Bottles
-37:MagicPowder
-38:Rings
-39:Scepters
-40:RupeePickup
-41:Shields
-42:StarMan
-43:StopWatch
-44:Sword
-45:Chest(DontOpen Crash)
-46:Tunic
-47:WishingStone";
+1: Arrows
+2: Bag
+3: Book
+4: Bomb Bag
+5: Bombs
+6: Red Boomberang
+7: Bow
+8: Staffs (Green:0 Blue:1 Red:2)
+9: Cape
+10: Compass
+11: Crystals
+12: Fairy
+13: Food
+14: Gems
+15: Treasure Bag
+16: Gloves
+17: Heart Pickup
+18: Heart Container
+19: Hookshot
+20: Small Key
+21: Master Key
+22: Treasure Room Key
+23: Kinstone
+24: Oil Lamp
+25: Pazo's Letter
+26: Small Magic Pickup
+27: Half Magic
+28: Map
+29: Bombos
+30: Mirror
+31: Moon Pearl
+32: Mushroom
+33: Orbs
+34: Pendants
+35: Sodas
+36: Bottles
+37: Magic Powder
+38: Rings
+39: Rods
+40: Rupee Pickup
+41: Shields
+42: Star Man
+43: Stop Watch
+44: Swords
+45: Treasure Chest
+46: Tunics
+47: Wishing Stone";
 
         private readonly List<int> _addressOffsets;
         private readonly long _baseAddress;

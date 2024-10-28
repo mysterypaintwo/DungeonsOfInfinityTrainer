@@ -157,16 +157,16 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             /// Define the skeleton cheats to base all the other codes off of
             // X-Position
             // Setup tree position is 944
-            Cheat xPosAddress = new Cheat("X-Pos (Ctrl + A/D to teleport)", 0x013A28D0, VarType.FLOAT);
+            // v1.1.6
+            Cheat xPosAddress = new Cheat("X-Pos (Ctrl + A/D to teleport)", 0x013A5900, VarType.FLOAT);
             xPosAddress.AddOffset(0x0);
-            xPosAddress.AddOffset(0xD50);
-            xPosAddress.AddOffset(0x18);
-            xPosAddress.AddOffset(0x58);
+            xPosAddress.AddOffset(0xD78);
+            xPosAddress.AddOffset(0xD8);
+            xPosAddress.AddOffset(0x68);
             xPosAddress.AddOffset(0x10);
             xPosAddress.AddOffset(0xF4);
             xPosAddress.AddHotkey(HotkeyActions.DEC_VAL, new List<int>() { 17, 65 }, 32);
             xPosAddress.AddHotkey(HotkeyActions.INC_VAL, new List<int>() { 17, 68 }, 32);
-
 
             /*
             Cheat inventoryIsDisabled = new Cheat("InventoryIsDisabled", 0x01385010, VarType.DOUBLE);
@@ -181,98 +181,63 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             */
             
             // Rupees
-            // v1.1.5
-            Cheat rupeesAddress = new Cheat("Rupees", 0x01394270, VarType.DOUBLE);
-            rupeesAddress.AddOffset(0x10);
-            rupeesAddress.AddOffset(0xD90);
-            rupeesAddress.AddOffset(0x388);
-            rupeesAddress.AddOffset(0x188);
-            rupeesAddress.AddOffset(0x580);
-            rupeesAddress.AddOffset(0x220);
+            // v1.1.6
+            Cheat rupeesAddress = new Cheat("Rupees", 0x015EE8E0, VarType.DOUBLE);
+            rupeesAddress.AddOffset(0x0);
+            rupeesAddress.AddOffset(0xD0);
+            rupeesAddress.AddOffset(0xC30);
+            rupeesAddress.AddOffset(0x130);
 
             // Has Pendant of Health
-            // v1.1.5
-            Cheat hasPendantOfHealth = new Cheat("HasPendantOfHealth", 0x01394270, VarType.DOUBLE);
+            // v1.1.6
+            Cheat hasPendantOfHealth = new Cheat("HasPendantOfHealth", 0x013972A0, VarType.DOUBLE);
             hasPendantOfHealth.AddOffset(0x10);
-            hasPendantOfHealth.AddOffset(0x220);
-            hasPendantOfHealth.AddOffset(0x520);
-            hasPendantOfHealth.AddOffset(0x748);
-            hasPendantOfHealth.AddOffset(0x90);
-            hasPendantOfHealth.AddOffset(0xE00);
+            hasPendantOfHealth.AddOffset(0x710);
+            hasPendantOfHealth.AddOffset(0x348);
+            hasPendantOfHealth.AddOffset(0x50);
+            hasPendantOfHealth.AddOffset(0xF80);
 
             // Has Master Key
-            // v1.1.5
-            Cheat hasMasterKey = new Cheat("HasMasterKey", 0x015B8F98, VarType.DOUBLE);
-            hasMasterKey.AddOffset(0x0);
-            hasMasterKey.AddOffset(0x30);
-            hasMasterKey.AddOffset(0xB80);
-            hasMasterKey.AddOffset(0x0);
-            hasMasterKey.AddOffset(0x148);
-            hasMasterKey.AddOffset(0x20);
+            // v1.1.6
+            Cheat hasMasterKey = new Cheat("HasMasterKey", 0x013972A0, VarType.DOUBLE);
+            hasMasterKey.AddOffset(0x10);
+            hasMasterKey.AddOffset(0x220);
+            hasMasterKey.AddOffset(0x388);
+            hasMasterKey.AddOffset(0x8);
+            hasMasterKey.AddOffset(0xC0);
 
             // Has Moon Pearl
-            // v1.1.5
             Cheat hasMoonPearl = new Cheat("HasMoonPearl", hasMasterKey, 0x30, VarType.DOUBLE);
-            // v1.1.4
-            /*
-            Cheat hasMoonPearl = new Cheat("HasMoonPearl", 0x01394270, VarType.DOUBLE);
-            hasMoonPearl.AddOffset(0x10);
-            hasMoonPearl.AddOffset(0x220);
-            hasMoonPearl.AddOffset(0x188);
-            hasMoonPearl.AddOffset(0x8);
-            hasMoonPearl.AddOffset(0x110);
-            */
 
             // Has Oil Lamp
-            // v1.1.4
-            //Cheat hasOilLamp = new Cheat("HasOilLamp", 0x01380E20, VarType.DOUBLE);
-            //Cheat hasOilLamp = new Cheat("HasOilLamp", hasMasterKey, 0x20, VarType.DOUBLE);
-            // v1.1.5
             Cheat hasOilLamp = new Cheat("HasOilLamp", hasMasterKey, -0x30, VarType.DOUBLE);
 
             // Bomb Bag Bomb Count
-            //Cheat bombBagBombCount = new Cheat("BombCount (After Bomb Bag)", arrowCount, 0xD5E150, VarType.DOUBLE);
-            // v1.1.5
-            Cheat bombBagBombCount = new Cheat("Bomb Count (After Bomb Bag)", 0x01394270, VarType.DOUBLE);
+            // v1.1.6
+            Cheat bombBagBombCount = new Cheat("Bomb Count (After Bomb Bag)", 0x013972A0, VarType.DOUBLE);
             bombBagBombCount.AddOffset(0x10);
-            bombBagBombCount.AddOffset(0x420);
-            bombBagBombCount.AddOffset(0x320);
-            bombBagBombCount.AddOffset(0x20);
-            bombBagBombCount.AddOffset(0x140);
+            bombBagBombCount.AddOffset(0x430);
+            bombBagBombCount.AddOffset(0x3F0);
+            bombBagBombCount.AddOffset(0x30);
+            bombBagBombCount.AddOffset(0x3C0);
 
-            // v1.1.5
-            Cheat arrowCount = new Cheat("Arrow Count", 0x01394270, VarType.DOUBLE);
+            // v1.1.6
+            Cheat arrowCount = new Cheat("Arrow Count", 0x013972A0, VarType.DOUBLE);
             arrowCount.AddOffset(0x10);
-            arrowCount.AddOffset(0x220);
             arrowCount.AddOffset(0x220);
             arrowCount.AddOffset(0x188);
             arrowCount.AddOffset(0x8);
             arrowCount.AddOffset(0x0);
 
-            // v1.1.4
-            //Cheat bombBagBombCount = new Cheat("Bomb Count (After Bomb Bag)", 0x01385108, VarType.DOUBLE);
-            //bombBagBombCount.AddOffset(0x1A0);
-            //bombBagBombCount.AddOffset(0x200);
-
-            /*
-            // v1.1.3
-            Cheat bombBagBombCount = new Cheat("BombCount (After Bomb Bag)", 0x013831D8, VarType.DOUBLE);
-            bombBagBombCount.AddOffset(0x188);
-            bombBagBombCount.AddOffset(0x18);
-            bombBagBombCount.AddOffset(0x188);
-            bombBagBombCount.AddOffset(0x180);
-            */
-
             // Inventory Slot 2 Item Quantity
-
-            Cheat slot2Quantity = new Cheat("Slot 2 Item Amount (Quantity)", 0x01398558, VarType.DOUBLE);
-            slot2Quantity.AddOffset(0x140);
-            slot2Quantity.AddOffset(0x80);
-            slot2Quantity.AddOffset(0x320);
-            slot2Quantity.AddOffset(0x448);
-            slot2Quantity.AddOffset(0x70);
-            slot2Quantity.AddOffset(0x270);
-            slot2Quantity.AddOffset(0x50);
+            // v1.1.6
+            Cheat slot2Quantity = new Cheat("Slot 2 Item Amount (Quantity)", 0x013972A0, VarType.DOUBLE);
+            slot2Quantity.AddOffset(0x10);
+            slot2Quantity.AddOffset(0x220);
+            slot2Quantity.AddOffset(0x248);
+            slot2Quantity.AddOffset(0xB0);
+            slot2Quantity.AddOffset(0xA0);
+            slot2Quantity.AddOffset(0x500);
 
             //Cheat slot2StorageID = new Cheat("Slot 2 Storage ID", slot2Quantity, -0x20, VarType.DOUBLE);
             Cheat slot2Enabled = new Cheat("Slot 2 Enabled", slot2Quantity, -0x10, VarType.DOUBLE);
