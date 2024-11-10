@@ -71,7 +71,8 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
 44: Swords
 45: Treasure Chest
 46: Tunics
-47: Wishing Stone";
+47: Wishing Stone
+48: Coupons";
 
         private readonly List<int> _addressOffsets;
         private readonly long _baseAddress;
