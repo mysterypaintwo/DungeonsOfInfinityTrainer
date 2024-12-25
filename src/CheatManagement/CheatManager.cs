@@ -248,9 +248,9 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             groupPlayerInfo.AddCheatEntry(yPosAddress, CheatList.Y_POS);
 
             // Player Status Codes
-            Cheat playerMaxHealth = new Cheat("Max Health", rupeesAddress, 0x180, VarType.DOUBLE);
+            Cheat playerMaxHealth = new Cheat("Max Health (Max: 16)", rupeesAddress, 0x180, VarType.DOUBLE);
             groupPlayerInfo.AddCheatEntry(playerMaxHealth, CheatList.MAX_HEALTH);
-            Cheat playerCurrentHealth = new Cheat("Current Health", playerMaxHealth, 0x10, VarType.DOUBLE);
+            Cheat playerCurrentHealth = new Cheat("Current Health (Max: 16)", playerMaxHealth, 0x10, VarType.DOUBLE);
             groupPlayerInfo.AddCheatEntry(playerCurrentHealth, CheatList.CUR_HEALTH);
 
 
@@ -269,13 +269,13 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             //Cheat playerEquippedItemSlot = new Cheat("Equipped Item Slot (First slot is 7)", slot2Quantity, -0xBA0, VarType.DOUBLE);
             //groupPlayerInfo.AddCheatEntry(playerEquippedItemSlot, CheatList.EQUIPPED_ITEM_SLOT);
 
-            Cheat playerEquippedTunic = new Cheat("Equipped Tunic", rupeesAddress, -0xC0, VarType.DOUBLE);
+            Cheat playerEquippedTunic = new Cheat("Equipped Tunic (Max: 3)", rupeesAddress, -0xC0, VarType.DOUBLE);
             groupPlayerInfo.AddCheatEntry(playerEquippedTunic, CheatList.EQUIPPED_TUNIC);
-            Cheat playerEquippedSword = new Cheat("Equipped Sword", rupeesAddress, -0x80, VarType.FOUR_BYTE);
+            Cheat playerEquippedSword = new Cheat("Equipped Sword (Max: 5)", rupeesAddress, -0x80, VarType.FOUR_BYTE);
             groupPlayerInfo.AddCheatEntry(playerEquippedSword, CheatList.EQUIPPED_SWORD);
-            Cheat playerEquippedShield = new Cheat("Equipped Shield", rupeesAddress, -0x20, VarType.DOUBLE);
+            Cheat playerEquippedShield = new Cheat("Equipped Shield (Max: 3)", rupeesAddress, -0x20, VarType.DOUBLE);
             groupPlayerInfo.AddCheatEntry(playerEquippedShield, CheatList.EQUIPPED_SHIELD);
-            Cheat playerEquippedGlove = new Cheat("Equipped Glove", rupeesAddress, 0x1C0, VarType.DOUBLE);
+            Cheat playerEquippedGlove = new Cheat("Equipped Glove (Max: 2)", rupeesAddress, 0x1C0, VarType.DOUBLE);
             groupPlayerInfo.AddCheatEntry(playerEquippedGlove, CheatList.EQUIPPED_GLOVE);
 
             // Has Oil Lamp
