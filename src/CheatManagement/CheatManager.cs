@@ -123,7 +123,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             _groupMaster = new CheatGroup(MainWindow.GameVersion + " (Current)");
             CheatGroup groupPlayerInfo = new CheatGroup("Player Information");
             CheatGroup groupFlags = new CheatGroup("Flags");
-            CheatGroup groupInventory = new CheatGroup("Inventory");
+            CheatGroup groupInventory = new CheatGroup("Inventory (WIP, needs refactoring)");
             _groupMaster.AddChildGroup(groupPlayerInfo, GroupList.G_PLAYER_INFO);
             _groupMaster.AddChildGroup(groupFlags, GroupList.G_FLAGS);
             _groupMaster.AddChildGroup(groupInventory, GroupList.G_INVENTORY);
