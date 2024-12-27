@@ -329,24 +329,6 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             }
             inventoryGroupsCounter++;
 
-            // Treasure Bag Inventory Slots
-            InventorySlot[] treasureInventorySlots = new InventorySlot[numTreasureInventorySlots];
-
-            offset = 0x6F0;
-
-            for (var i = 0; i < treasureInventorySlots.Length; i++)
-            {
-                treasureInventorySlots[i] = new InventorySlot(i + 1, slot2Quantity, offset);
-
-                CheatGroup thisGroupInvSlot = treasureInventorySlots[i].GenerateCheatGroup(inventoryCodesCounter, string.Format("Slot {0}", i + 1));
-                groupInventoryTreasureBag.AddChildGroup(thisGroupInvSlot, GroupList.G_INV_SLOTS_BEGIN + inventoryGroupsCounter);
-                inventoryCodesCounter++;
-
-                offset -= 0x80;
-            }
-            inventoryGroupsCounter++;
-
-
             // Main Slot Item Class Codes for each of the categorized bags
             offset = 0x300;
             InventorySlot slotEquipmentBagMain = new InventorySlot(-1, slot2Quantity, offset);
@@ -381,6 +363,24 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             tmpGroupInvSlot = slotTreasureBagMain.GenerateCheatGroup(inventoryCodesCounter, "Main Slot");
             groupInventoryTreasureBag.AddChildGroup(tmpGroupInvSlot, GroupList.G_INV_SLOTS_BEGIN + inventoryGroupsCounter);
             inventoryCodesCounter++;
+            inventoryGroupsCounter++;
+
+
+            // Treasure Bag Inventory Slots
+            InventorySlot[] treasureInventorySlots = new InventorySlot[numTreasureInventorySlots];
+
+            offset = 0x6F0;
+
+            for (var i = 0; i < treasureInventorySlots.Length; i++)
+            {
+                treasureInventorySlots[i] = new InventorySlot(i + 1, slot2Quantity, offset);
+
+                CheatGroup thisGroupInvSlot = treasureInventorySlots[i].GenerateCheatGroup(inventoryCodesCounter, string.Format("Slot {0}", i + 1));
+                groupInventoryTreasureBag.AddChildGroup(thisGroupInvSlot, GroupList.G_INV_SLOTS_BEGIN + inventoryGroupsCounter);
+                inventoryCodesCounter++;
+
+                offset -= 0x80;
+            }
             inventoryGroupsCounter++;
 
 
