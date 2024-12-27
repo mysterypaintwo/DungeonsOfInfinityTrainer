@@ -41,7 +41,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
         public List<Cheat> GetCheatEntry(CheatManager.CheatList cheatEntry)
         {
             List<Cheat> returnedCheats = new List<Cheat>();
-            if (cheatEntry >= CheatManager.CheatList.INV_SLOT_0 && cheatEntry <= CheatManager.CheatList.INV_SLOT_17)
+            if (cheatEntry >= CheatManager.CheatList.INV_SLOTS_BEGIN)
             {
                 returnedCheats.Add(_cheatDict[cheatEntry]);
                 int chIndex = _cheatEntries.IndexOf(_cheatDict[cheatEntry]);

@@ -24,7 +24,8 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
 
     public class Cheat
     {
-        public static string InvDropDown = @"0:Quiver
+        public static string InvDropDown = @"-1:Empty
+0:Quiver
 1: Arrows
 2: Bag
 3: Book
@@ -72,7 +73,9 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
 45: Treasure Chest
 46: Tunics
 47: Wishing Stone
-48: Coupons";
+48: Coupons
+49: Food Bag
+50: Pendant Bag";
 
         private readonly List<int> _addressOffsets;
         private readonly long _baseAddress;

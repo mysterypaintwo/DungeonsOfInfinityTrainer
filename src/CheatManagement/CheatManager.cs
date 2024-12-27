@@ -1,16 +1,26 @@
 ﻿using System.Collections.Generic;
 using System;
 using System.Runtime.InteropServices;
+using HarfBuzzSharp;
+using System.Linq;
 
 namespace DungeonsOfInfinityTrainer.CheatManagement
 {
     public class CheatManager
     {
-        private const int NegInventoryEntries = 5;
-        private const int UsedInventorySlots = 18;
-        private const int TotalInventorySlots = UsedInventorySlots + NegInventoryEntries + 13;
+        private const int NegInventoryEntries = 0;
+        private const int UsedInventorySlots = 10;
+        private const int TotalPrimaryInventorySlots = UsedInventorySlots + NegInventoryEntries + 0;
         private static int s_xmlID = 0;
         private static int s_groupCount = 1;
+        private int inventoryCodesCounter = 0;
+        private int inventoryGroupsCounter = 0;
+        private int numTreasureInventorySlots = 6;
+        private int numFoodInventorySlots = 3;
+        private int numPendantInventorySlots = 3;
+        private int numBombInventorySlots = 1;
+        private int numEquipmentInventorySlots = 6;
+        
         private CheatGroup _groupMaster;
 
         public enum CheatList
@@ -26,6 +36,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             KEY_COUNT,
             ARROW_COUNT,
             BOMB_BAG_BOMB_COUNT,
+            HUD_BOMB_BAG_BOMB_COUNT,
             EQUIPPED_ITEM_SLOT,
             EQUIPPED_TUNIC,
             EQUIPPED_SWORD,
@@ -45,35 +56,20 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             FLAG_PEN_WEALTH,
             FLAG_BIG_KEY,
             FLAG_MOON_PEARL,
+            FLAG_QUIVER,
+            FLAG_BOMB_BAG,
+            FLAG_FOOD_BAG,
+            FLAG_TREASURE_BAG,
+            FLAG_PENDANT_BAG,
             FLAG_OIL_LAMP,
             FLAG_INVENTORY_IS_DISABLED,
+            FLAG_INVENTORY_NAVIGATION_FOOD,
+            FLAG_INVENTORY_NAVIGATION_BOMBS,
+            FLAG_INVENTORY_NAVIGATION_PENDANTS,
+            FLAG_INVENTORY_NAVIGATION_TREASURES,
 
-            //Inventory Groups
-            INV_SLOT_NEG_7,
-            INV_SLOT_NEG_6,
-            INV_SLOT_NEG_5,
-            INV_SLOT_NEG_4,
-            INV_SLOT_NEG_3,
-            INV_SLOT_NEG_2,
-            INV_SLOT_NEG_1,
-            INV_SLOT_0,
-            INV_SLOT_1,
-            INV_SLOT_2,
-            INV_SLOT_3,
-            INV_SLOT_4,
-            INV_SLOT_5,
-            INV_SLOT_6,
-            INV_SLOT_7,
-            INV_SLOT_8,
-            INV_SLOT_9,
-            INV_SLOT_10,
-            INV_SLOT_11,
-            INV_SLOT_12,
-            INV_SLOT_13,
-            INV_SLOT_14,
-            INV_SLOT_15,
-            INV_SLOT_16,
-            INV_SLOT_17,
+            // Inventory Groups (Primary)
+            INV_SLOTS_BEGIN,
             MAX
         };
 
@@ -83,32 +79,14 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             G_PLAYER_INFO,
             G_FLAGS,
             G_INVENTORY,
-            G_INV_SLOT_NEG_7,
-            G_INV_SLOT_NEG_6,
-            G_INV_SLOT_NEG_5,
-            G_INV_SLOT_NEG_4,
-            G_INV_SLOT_NEG_3,
-            G_INV_SLOT_NEG_2,
-            G_INV_SLOT_NEG_1,
-            G_INV_SLOT_0,
-            G_INV_SLOT_1,
-            G_INV_SLOT_2,
-            G_INV_SLOT_3,
-            G_INV_SLOT_4,
-            G_INV_SLOT_5,
-            G_INV_SLOT_6,
-            G_INV_SLOT_7,
-            G_INV_SLOT_8,
-            G_INV_SLOT_9,
-            G_INV_SLOT_10,
-            G_INV_SLOT_11,
-            G_INV_SLOT_12,
-            G_INV_SLOT_13,
-            G_INV_SLOT_14,
-            G_INV_SLOT_15,
-            G_INV_SLOT_16,
-            G_INV_SLOT_17,
-            MAX
+            G_INVENTORY_PRIMARY,
+            G_INVENTORY_EQUIPMENT,
+            G_INVENTORY_FOOD_BAG,
+            G_INVENTORY_BOMB_BAG,
+            G_INVENTORY_PENDANT_BAG,
+            G_INVENTORY_TREASURE_BAG,
+            G_INV_SLOTS_BEGIN,
+            MAX,
         };
 
         public enum HotkeyActions
@@ -123,37 +101,24 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             _groupMaster = new CheatGroup(MainWindow.GameVersion + " (Current)");
             CheatGroup groupPlayerInfo = new CheatGroup("Player Information");
             CheatGroup groupFlags = new CheatGroup("Flags");
-            CheatGroup groupInventory = new CheatGroup("Inventory (WIP, needs refactoring)");
+            CheatGroup groupInventoryMaster = new CheatGroup("Inventory Codes");
+            CheatGroup groupInventoryPrimary = new CheatGroup("Main Inventory Window");
+            CheatGroup groupInventoryEquipment = new CheatGroup("Equipment Bag");
+            CheatGroup groupInventoryFoodBag = new CheatGroup("Food Bag");
+            CheatGroup groupInventoryBombBag = new CheatGroup("Bomb Bag");
+            CheatGroup groupInventoryPendantBag = new CheatGroup("Pendant Bag");
+            CheatGroup groupInventoryTreasureBag = new CheatGroup("Treasure Bag");
             _groupMaster.AddChildGroup(groupPlayerInfo, GroupList.G_PLAYER_INFO);
             _groupMaster.AddChildGroup(groupFlags, GroupList.G_FLAGS);
-            _groupMaster.AddChildGroup(groupInventory, GroupList.G_INVENTORY);
 
-            Dictionary<int, CheatGroup> groupInvSlots = new Dictionary<int, CheatGroup>();
+            groupInventoryMaster.AddChildGroup(groupInventoryPrimary, GroupList.G_INVENTORY_PRIMARY);
+            groupInventoryMaster.AddChildGroup(groupInventoryEquipment, GroupList.G_INVENTORY_EQUIPMENT);
+            groupInventoryMaster.AddChildGroup(groupInventoryFoodBag, GroupList.G_INVENTORY_FOOD_BAG);
+            groupInventoryMaster.AddChildGroup(groupInventoryBombBag, GroupList.G_INVENTORY_BOMB_BAG);
+            groupInventoryMaster.AddChildGroup(groupInventoryPendantBag, GroupList.G_INVENTORY_PENDANT_BAG);
+            groupInventoryMaster.AddChildGroup(groupInventoryTreasureBag, GroupList.G_INVENTORY_TREASURE_BAG);
 
-            for (var i = -NegInventoryEntries; i <= TotalInventorySlots - NegInventoryEntries; i++) // Starts from Slot -[NegInventoryEntries]
-            {
-                string usedString = string.Empty;
-                switch (i)
-                {
-                    case 0:
-                        CheatGroup groupInvSlot0 = new CheatGroup("Slot 0 (Starting Slot For Bag Upgrade)");
-                        groupInventory.AddChildGroup(groupInvSlot0, GroupList.G_INV_SLOT_0);
-                        groupInvSlots[0] = groupInvSlot0;
-                        break;
-                    case 1:
-                        CheatGroup groupInvSlot1 = new CheatGroup("Slot 1 (Starting Slot For No Bag Upgrade)");
-                        groupInventory.AddChildGroup(groupInvSlot1, GroupList.G_INV_SLOT_1);
-                        groupInvSlots[1] = groupInvSlot1;
-                        break;
-                    default:
-                        if (i >= UsedInventorySlots)
-                            usedString = " (Unused)";
-                        CheatGroup thisCheatGroup = new CheatGroup(string.Format("Slot {0}" + usedString, i));
-                        groupInvSlots[i] = thisCheatGroup;
-                        groupInventory.AddChildGroup(groupInvSlots[i], GroupList.G_INV_SLOT_0 + i);
-                        break;
-                }
-            }
+            _groupMaster.AddChildGroup(groupInventoryMaster, GroupList.G_INVENTORY);
 
             /// Define the skeleton cheats to base all the other codes off of
             // X-Position
@@ -207,12 +172,34 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             // Has Moon Pearl
             Cheat hasMoonPearl = new Cheat("HasMoonPearl", hasMasterKey, 0x20, VarType.DOUBLE);
 
+            // Has Quiver
+            Cheat hasQuiver = new Cheat("HasQuiver", hasMasterKey, -0xD0, VarType.DOUBLE);
+
+            // Has Bomb Bag
+            Cheat hasBombBag = new Cheat("HasBombBag", hasMasterKey, -0xE0, VarType.DOUBLE);
+
+            // Has Treasure Bag
+            Cheat hasTreasureBag = new Cheat("HasTreasureBag", hasMasterKey, -0x70, VarType.DOUBLE);
+
+            // Has Pendant Bag
+            Cheat hasPendantBag = new Cheat("HasPendantBag", hasMasterKey, 0x70, VarType.DOUBLE);
+
+            // Has Food Bag
+            Cheat hasFoodBag = new Cheat("HasFoodBag", hasMasterKey, 0x60, VarType.DOUBLE);
+            
             // Bomb Bag Bomb Count
             // v1.2.0
             Cheat bombBagBombCount = new Cheat("Bomb Count (After Bomb Bag)", 0x01443A00, VarType.DOUBLE);
             bombBagBombCount.AddOffset(0x188);
             bombBagBombCount.AddOffset(0x540);
 
+            // Bomb Bag Bomb Count
+            // v1.2.0
+            Cheat hudBombBagBombCount = new Cheat("Bomb HUD Count (After Bomb Bag)", 0x016BE7D0, VarType.DOUBLE);
+            hudBombBagBombCount.AddOffset(0x3E0); 
+            hudBombBagBombCount.AddOffset(0x10); 
+            hudBombBagBombCount.AddOffset(0x3C0);
+            
             // v1.2.0
             Cheat arrowCount = new Cheat("Arrow Count", 0x016BC498, VarType.DOUBLE);
             arrowCount.AddOffset(0x288);
@@ -226,16 +213,6 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             slot2Quantity.AddOffset(0x280);
             slot2Quantity.AddOffset(0x240);
             slot2Quantity.AddOffset(0xD0);
-
-            //Cheat slot2StorageID = new Cheat("Slot 2 Storage ID", slot2Quantity, -0x20, VarType.DOUBLE);
-            Cheat slot2Enabled = new Cheat("Slot 2 Disabled", slot2Quantity, -0x20, VarType.DOUBLE);
-            Cheat slot2IDDoub = new Cheat("Slot 2 Item Class (ID, Double [Adds to Inventory])", slot2Quantity, 0x20, VarType.DOUBLE);
-            slot2IDDoub.EnableInvDropdownList();
-            Cheat slot2IDFourByte = new Cheat("Slot 2 Item Class (ID, 4 Byte [Modifies Inventory])", slot2Quantity, 0x20, VarType.FOUR_BYTE);
-            slot2IDFourByte.EnableInvDropdownList();
-            Cheat slot2SecIDDoub = new Cheat("Slot 2 Item Index (Secondary ID, Double)", slot2Quantity, 0x10, VarType.DOUBLE);
-            Cheat slot2SecIDFourByte = new Cheat("Slot 2 Item Index (Secondary ID, 4 Byte)", slot2Quantity, 0x10, VarType.FOUR_BYTE);
-            Cheat slot2SecIDFloat = new Cheat("Slot 2 Item Index (Secondary ID, Float)", slot2Quantity, 0x10, VarType.FLOAT);
 
             /// Generate all the other codes (and add the skeleton codes to the code list)
 
@@ -263,6 +240,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
 
             groupPlayerInfo.AddCheatEntry(arrowCount, CheatList.ARROW_COUNT);
             groupPlayerInfo.AddCheatEntry(bombBagBombCount, CheatList.BOMB_BAG_BOMB_COUNT);
+            groupPlayerInfo.AddCheatEntry(hudBombBagBombCount, CheatList.HUD_BOMB_BAG_BOMB_COUNT);
 
 
 
@@ -306,67 +284,175 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
 
             groupFlags.AddCheatEntry(hasMoonPearl, CheatList.FLAG_MOON_PEARL);
             groupFlags.AddCheatEntry(hasMasterKey, CheatList.FLAG_BIG_KEY);
+
+            groupFlags.AddCheatEntry(hasQuiver, CheatList.FLAG_QUIVER);
             groupFlags.AddCheatEntry(hasOilLamp, CheatList.FLAG_OIL_LAMP);
 
-            // Inventory Slots (all 17)
-            //Dictionary<int, Cheat> inventoryStorageID = new Dictionary<int, Cheat>();
-            Dictionary<int, Cheat> inventoryEnabled = new Dictionary<int, Cheat>();
-            Dictionary<int, Cheat> inventoryQuants = new Dictionary<int, Cheat>();
-            Dictionary<int, Cheat> inventoryIDsDoub = new Dictionary<int, Cheat>();
-            Dictionary<int, Cheat> inventoryIDsFourByte = new Dictionary<int, Cheat>();
-            Dictionary<int, Cheat> inventorySecIDsDoub = new Dictionary<int, Cheat>();
-            Dictionary<int, Cheat> inventorySecIDsFourByte = new Dictionary<int, Cheat>();
-            Dictionary<int, Cheat> inventorySecIDsFloat = new Dictionary<int, Cheat>();
 
-            //inventoryStorageID[2] = slot2StorageID;
-            inventoryEnabled[2] = slot2Enabled;
-            inventoryQuants[2] = slot2Quantity;
-            inventoryIDsDoub[2] = slot2IDDoub;
-            inventoryIDsFourByte[2] = slot2IDFourByte;
-            inventorySecIDsDoub[2] = slot2SecIDDoub;
-            inventorySecIDsFourByte[2] = slot2SecIDFourByte;
-            inventorySecIDsFloat[2] = slot2SecIDFloat;
+            // Inventory Navigation Flags
+            Cheat enableFoodBagMovement = new Cheat("CanNavigateInventory (Food Bag)", slot2Quantity, 0x220 + (-0x80 * 2) + 0x310 + 0x7D0, VarType.DOUBLE);
+            groupFlags.AddCheatEntry(enableFoodBagMovement, CheatList.FLAG_INVENTORY_NAVIGATION_FOOD);
 
-            int slotOffsetCount = 2 + NegInventoryEntries;
+            Cheat enableBombBagNavigation = new Cheat("CanNavigateInventory (Bomb Bag)", slot2Quantity, 0x220 + 0x870, VarType.DOUBLE);
+            groupFlags.AddCheatEntry(enableBombBagNavigation, CheatList.FLAG_INVENTORY_NAVIGATION_BOMBS);
+
+            Cheat enablePendantBagMovement = new Cheat("CanNavigateInventory (Pendant Bag)", slot2Quantity, 0x220 + (-0x80 * 1) + 0x680, VarType.DOUBLE);
+            groupFlags.AddCheatEntry(enablePendantBagMovement, CheatList.FLAG_INVENTORY_NAVIGATION_PENDANTS);
+
+            Cheat enableTreasureBagMovement = new Cheat("CanNavigateInventory (Treasure Bag)", slot2Quantity, 0x220 + (-0x80 * 2) + 0x310, VarType.DOUBLE);
+            groupFlags.AddCheatEntry(enableTreasureBagMovement, CheatList.FLAG_INVENTORY_NAVIGATION_TREASURES);
+
+            // Bag Owned Flags
+            groupFlags.AddCheatEntry(hasFoodBag, CheatList.FLAG_FOOD_BAG);
+            groupFlags.AddCheatEntry(hasBombBag, CheatList.FLAG_BOMB_BAG);
+            groupFlags.AddCheatEntry(hasPendantBag, CheatList.FLAG_PENDANT_BAG);
+            groupFlags.AddCheatEntry(hasTreasureBag, CheatList.FLAG_TREASURE_BAG);
+
+            // Primary Inventory Slots
+            InventorySlot[] primaryInventorySlots = new InventorySlot[TotalPrimaryInventorySlots];
+
+            int slotOffsetCount = 1 + NegInventoryEntries;
             int offset = 0x80 * slotOffsetCount; // i = 0
-            for (int slotID = -NegInventoryEntries; slotID <= TotalInventorySlots - NegInventoryEntries; slotID++) // Start from -[NegInventoryEntries]
+
+            for (var i = 0; i < primaryInventorySlots.Length; i++)
             {
-                if (slotID != 2)
-                {
-                    inventoryEnabled[slotID] = new Cheat(string.Format("Slot {0} Disabled", slotID), slot2Quantity, offset - 0x20, VarType.DOUBLE);
-                    groupInvSlots[slotID].AddCheatEntry(inventoryEnabled[slotID], CheatList.UNDEFINED);
+                primaryInventorySlots[i] = new InventorySlot(i + 1, slot2Quantity, offset);
 
-                    inventoryQuants[slotID] = new Cheat(string.Format("Slot {0} Item Amount (Quantity)", slotID), slot2Quantity, offset, VarType.DOUBLE);
-                    groupInvSlots[slotID].AddCheatEntry(inventoryQuants[slotID], CheatList.INV_SLOT_0 + slotID);
+                string usedString = string.Empty;
+                if (i > UsedInventorySlots)
+                    usedString = " (Unused)";
+                CheatGroup thisGroupInvSlot = primaryInventorySlots[i].GenerateCheatGroup(inventoryCodesCounter, string.Format("Slot {0}" + usedString, i + 1));
+                groupInventoryPrimary.AddChildGroup(thisGroupInvSlot, GroupList.G_INV_SLOTS_BEGIN + inventoryGroupsCounter);
+                inventoryCodesCounter++;
 
-                    inventoryIDsDoub[slotID] = new Cheat(string.Format("Slot {0} Item Class (ID, Double [Adds to Inventory])", slotID), slot2Quantity, offset + 0x20, VarType.DOUBLE);
-                    inventoryIDsDoub[slotID].EnableInvDropdownList();
-                    groupInvSlots[slotID].AddCheatEntry(inventoryIDsDoub[slotID], CheatList.UNDEFINED);
-
-                    inventoryIDsFourByte[slotID] = new Cheat(string.Format("Slot {0} Item Class (ID, 4 Byte [Modifies Inventory])", slotID), slot2Quantity, offset + 0x20, VarType.FOUR_BYTE);
-                    inventoryIDsFourByte[slotID].EnableInvDropdownList();
-                    groupInvSlots[slotID].AddCheatEntry(inventoryIDsFourByte[slotID], CheatList.UNDEFINED);
-
-                    inventorySecIDsDoub[slotID] = new Cheat(string.Format("Slot {0} Item Index (Secondary ID, Double)", slotID), slot2Quantity, offset + 0x10, VarType.DOUBLE);
-                    groupInvSlots[slotID].AddCheatEntry(inventorySecIDsDoub[slotID], CheatList.UNDEFINED);
-                    inventorySecIDsFourByte[slotID] = new Cheat(string.Format("Slot {0} Item Index (Secondary ID, 4 Byte)", slotID), slot2Quantity, offset + 0x10, VarType.FOUR_BYTE);
-                    groupInvSlots[slotID].AddCheatEntry(inventorySecIDsFourByte[slotID], CheatList.UNDEFINED);
-                    inventorySecIDsFloat[slotID] = new Cheat(string.Format("Slot {0} Item Index (Secondary ID, Float)", slotID), slot2Quantity, offset + 0x10, VarType.FLOAT);
-                    groupInvSlots[slotID].AddCheatEntry(inventorySecIDsFloat[slotID], CheatList.UNDEFINED);
-                }
-                else
-                {
-                    //groupInvSlots[2].AddCheatEntry(slot2StorageID, CheatList.UNDEFINED);
-                    groupInvSlots[2].AddCheatEntry(slot2Enabled, CheatList.UNDEFINED);
-                    groupInvSlots[2].AddCheatEntry(slot2Quantity, CheatList.INV_SLOT_2);
-                    groupInvSlots[2].AddCheatEntry(slot2IDDoub, CheatList.UNDEFINED);
-                    groupInvSlots[2].AddCheatEntry(slot2IDFourByte, CheatList.UNDEFINED);
-                    groupInvSlots[2].AddCheatEntry(slot2SecIDDoub, CheatList.UNDEFINED);
-                    groupInvSlots[2].AddCheatEntry(slot2SecIDFourByte, CheatList.UNDEFINED);
-                    groupInvSlots[2].AddCheatEntry(slot2SecIDFloat, CheatList.UNDEFINED);
-                }
                 offset -= 0x80;
             }
+            inventoryGroupsCounter++;
+
+            // Treasure Bag Inventory Slots
+            InventorySlot[] treasureInventorySlots = new InventorySlot[numTreasureInventorySlots];
+
+            offset = 0x6F0;
+
+            for (var i = 0; i < treasureInventorySlots.Length; i++)
+            {
+                treasureInventorySlots[i] = new InventorySlot(i + 1, slot2Quantity, offset);
+
+                CheatGroup thisGroupInvSlot = treasureInventorySlots[i].GenerateCheatGroup(inventoryCodesCounter, string.Format("Slot {0}", i + 1));
+                groupInventoryTreasureBag.AddChildGroup(thisGroupInvSlot, GroupList.G_INV_SLOTS_BEGIN + inventoryGroupsCounter);
+                inventoryCodesCounter++;
+
+                offset -= 0x80;
+            }
+            inventoryGroupsCounter++;
+
+
+            // Main Slot Item Class Codes for each of the categorized bags
+            offset = 0x300;
+            InventorySlot slotEquipmentBagMain = new InventorySlot(-1, slot2Quantity, offset);
+            CheatGroup tmpGroupInvSlot = slotEquipmentBagMain.GenerateCheatGroup(inventoryCodesCounter, "Main Slot");
+            groupInventoryEquipment.AddChildGroup(tmpGroupInvSlot, GroupList.G_INV_SLOTS_BEGIN + inventoryGroupsCounter);
+            inventoryCodesCounter++;
+            inventoryGroupsCounter++;
+
+            offset = 0x200;
+            InventorySlot slotBombBagMain = new InventorySlot(-1, slot2Quantity, offset);
+            tmpGroupInvSlot = slotBombBagMain.GenerateCheatGroup(inventoryCodesCounter, "Main Slot");
+            groupInventoryBombBag.AddChildGroup(tmpGroupInvSlot, GroupList.G_INV_SLOTS_BEGIN + inventoryGroupsCounter);
+            inventoryCodesCounter++;
+            inventoryGroupsCounter++;
+
+            offset = 0x280;
+            InventorySlot slotFoodBagMain = new InventorySlot(-1, slot2Quantity, offset);
+            tmpGroupInvSlot = slotFoodBagMain.GenerateCheatGroup(inventoryCodesCounter, "Main Slot");
+            groupInventoryFoodBag.AddChildGroup(tmpGroupInvSlot, GroupList.G_INV_SLOTS_BEGIN + inventoryGroupsCounter);
+            inventoryCodesCounter++;
+            inventoryGroupsCounter++;
+
+            offset = 0x180;
+            InventorySlot slotPendantBagMain = new InventorySlot(-1, slot2Quantity, offset);
+            tmpGroupInvSlot = slotPendantBagMain.GenerateCheatGroup(inventoryCodesCounter, "Main Slot");
+            groupInventoryPendantBag.AddChildGroup(tmpGroupInvSlot, GroupList.G_INV_SLOTS_BEGIN + inventoryGroupsCounter);
+            inventoryCodesCounter++;
+            inventoryGroupsCounter++;
+
+            offset = 0x100;
+            InventorySlot slotTreasureBagMain = new InventorySlot(-1, slot2Quantity, offset);
+            tmpGroupInvSlot = slotTreasureBagMain.GenerateCheatGroup(inventoryCodesCounter, "Main Slot");
+            groupInventoryTreasureBag.AddChildGroup(tmpGroupInvSlot, GroupList.G_INV_SLOTS_BEGIN + inventoryGroupsCounter);
+            inventoryCodesCounter++;
+            inventoryGroupsCounter++;
+
+
+            // Food Bag Inventory Slots
+            InventorySlot[] foodInventorySlots = new InventorySlot[numFoodInventorySlots];
+
+            offset = 0xD40;
+
+            for (var i = 0; i < foodInventorySlots.Length; i++)
+            {
+                foodInventorySlots[i] = new InventorySlot(i + 1, slot2Quantity, offset);
+
+                CheatGroup thisGroupInvSlot = foodInventorySlots[i].GenerateCheatGroup(inventoryCodesCounter, string.Format("Slot {0}", i + 1));
+                groupInventoryFoodBag.AddChildGroup(thisGroupInvSlot, GroupList.G_INV_SLOTS_BEGIN + inventoryGroupsCounter);
+                inventoryCodesCounter++;
+
+                offset -= 0x80;
+            }
+            inventoryGroupsCounter++;
+
+            // Bomb Bag Inventory Slot
+            InventorySlot[] bombInventorySlots = new InventorySlot[numBombInventorySlots];
+
+            offset = 0xAD0;
+
+            for (var i = 0; i < bombInventorySlots.Length; i++)
+            {
+                bombInventorySlots[i] = new InventorySlot(i + 1, slot2Quantity, offset);
+
+                CheatGroup thisGroupInvSlot = bombInventorySlots[i].GenerateCheatGroup(inventoryCodesCounter, string.Format("Slot {0}", i + 1));
+                groupInventoryBombBag.AddChildGroup(thisGroupInvSlot, GroupList.G_INV_SLOTS_BEGIN + inventoryGroupsCounter);
+                inventoryCodesCounter++;
+
+                offset -= 0x80;
+            }
+            inventoryGroupsCounter++;
+
+            // Pendant Bag Inventory Slot
+            InventorySlot[] pendantInventorySlots = new InventorySlot[numPendantInventorySlots];
+
+            offset = 0x960;
+
+            for (var i = 0; i < pendantInventorySlots.Length; i++)
+            {
+                pendantInventorySlots[i] = new InventorySlot(i + 1, slot2Quantity, offset);
+
+                CheatGroup thisGroupInvSlot = pendantInventorySlots[i].GenerateCheatGroup(inventoryCodesCounter, string.Format("Slot {0}", i + 1));
+                groupInventoryPendantBag.AddChildGroup(thisGroupInvSlot, GroupList.G_INV_SLOTS_BEGIN + inventoryGroupsCounter);
+                inventoryCodesCounter++;
+
+                offset -= 0x80;
+            }
+            inventoryGroupsCounter++;
+
+            // Equipment Inventory Slot
+            InventorySlot[] equipmentInventorySlots = new InventorySlot[numEquipmentInventorySlots];
+
+            offset = 0x1130;
+
+            for (var i = 0; i < equipmentInventorySlots.Length; i++)
+            {
+                equipmentInventorySlots[i] = new InventorySlot(i + 1, slot2Quantity, offset);
+
+                CheatGroup thisGroupInvSlot = equipmentInventorySlots[i].GenerateCheatGroup(inventoryCodesCounter, string.Format("Slot {0}", i + 1));
+                groupInventoryEquipment.AddChildGroup(thisGroupInvSlot, GroupList.G_INV_SLOTS_BEGIN + inventoryGroupsCounter);
+                inventoryCodesCounter++;
+
+                offset -= 0x80;
+            }
+            inventoryGroupsCounter++;
+
+
         }
 
         public static int GetXmlID()
