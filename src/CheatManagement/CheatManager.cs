@@ -1,26 +1,24 @@
 ﻿using System.Collections.Generic;
-using System;
-using System.Runtime.InteropServices;
-using HarfBuzzSharp;
-using System.Linq;
 
 namespace DungeonsOfInfinityTrainer.CheatManagement
 {
     public class CheatManager
     {
-        private const int NegInventoryEntries = 0;
+        private const int NegativeInventoryEntries = 0;
         private const int UsedInventorySlots = 10;
-        private const int TotalPrimaryInventorySlots = UsedInventorySlots + NegInventoryEntries + 0;
-        private static int s_xmlID = 0;
-        private static int s_groupCount = 1;
+        private const int TotalPrimaryInventorySlots = UsedInventorySlots + NegativeInventoryEntries + 0;
+        private const int TreasureInventorySlots = 6;
+        private const int FoodInventorySlots = 3;
+        private const int PendantInventorySlots = 3;
+        private const int BombInventorySlots = 1;
+        private const int EquipmentInventorySlots = 6;
+
+        private static int XmlID = 0;
+        private static int GroupCount = 1;
+
         private int inventoryCodesCounter = 0;
         private int inventoryGroupsCounter = 0;
-        private int numTreasureInventorySlots = 6;
-        private int numFoodInventorySlots = 3;
-        private int numPendantInventorySlots = 3;
-        private int numBombInventorySlots = 1;
-        private int numEquipmentInventorySlots = 6;
-        
+
         private CheatGroup _groupMaster;
 
         public enum CheatList
@@ -36,7 +34,6 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             KEY_COUNT,
             ARROW_COUNT,
             BOMB_BAG_BOMB_COUNT,
-            HUD_BOMB_BAG_BOMB_COUNT,
             EQUIPPED_ITEM_SLOT,
             EQUIPPED_TUNIC,
             EQUIPPED_SWORD,
@@ -96,6 +93,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             INC_VAL,
             MAX
         };
+
         public CheatManager()
         {
             _groupMaster = new CheatGroup(MainWindow.GameVersion + " (Current)");
@@ -186,25 +184,21 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
 
             // Has Food Bag
             Cheat hasFoodBag = new Cheat("HasFoodBag", hasMasterKey, 0x60, VarType.DOUBLE);
-            
+
             // Bomb Bag Bomb Count
             // v1.2.0
             Cheat bombBagBombCount = new Cheat("Bomb Count (After Bomb Bag)", 0x01443A00, VarType.DOUBLE);
             bombBagBombCount.AddOffset(0x188);
             bombBagBombCount.AddOffset(0x540);
 
-            // Bomb Bag Bomb Count
-            // v1.2.0
-            Cheat hudBombBagBombCount = new Cheat("Bomb HUD Count (After Bomb Bag)", 0x016BE7D0, VarType.DOUBLE);
-            hudBombBagBombCount.AddOffset(0x3E0); 
-            hudBombBagBombCount.AddOffset(0x10); 
-            hudBombBagBombCount.AddOffset(0x3C0);
-            
+            /*
+            // Arrow Count
             // v1.2.0
             Cheat arrowCount = new Cheat("Arrow Count", 0x016BC498, VarType.DOUBLE);
             arrowCount.AddOffset(0x288);
             arrowCount.AddOffset(0x8);
             arrowCount.AddOffset(0x0);
+            */
 
             // Inventory Slot 2 Item Quantity
             // v1.2.0
@@ -230,19 +224,15 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             Cheat playerCurrentHealth = new Cheat("Current Health (Max: 16)", playerMaxHealth, 0x10, VarType.DOUBLE);
             groupPlayerInfo.AddCheatEntry(playerCurrentHealth, CheatList.CUR_HEALTH);
 
-
             Cheat playerMagic = new Cheat("Magic (Max: 64)", rupeesAddress, 0xD0, VarType.DOUBLE);
             groupPlayerInfo.AddCheatEntry(playerMagic, CheatList.MAGIC);
             groupPlayerInfo.AddCheatEntry(rupeesAddress, CheatList.RUPEES);
-            //Cheat arrowCount = new Cheat("Arrow Count", hasMasterKey, -0xA0, VarType.DOUBLE);
+            Cheat arrowCount = new Cheat("Arrow Count", rupeesAddress, -0x3BFA04B0, VarType.DOUBLE); // is also close to equippedtunic and ypos...
+            groupPlayerInfo.AddCheatEntry(arrowCount, CheatList.ARROW_COUNT);
             Cheat playerKeyCount = new Cheat("Key Count", playerMaxHealth, -0x20, VarType.DOUBLE);
             groupPlayerInfo.AddCheatEntry(playerKeyCount, CheatList.KEY_COUNT);
 
-            groupPlayerInfo.AddCheatEntry(arrowCount, CheatList.ARROW_COUNT);
             groupPlayerInfo.AddCheatEntry(bombBagBombCount, CheatList.BOMB_BAG_BOMB_COUNT);
-            groupPlayerInfo.AddCheatEntry(hudBombBagBombCount, CheatList.HUD_BOMB_BAG_BOMB_COUNT);
-
-
 
             //Cheat playerEquippedItemSlot = new Cheat("Equipped Item Slot (First slot is 7)", slot2Quantity, -0xBA0, VarType.DOUBLE);
             //groupPlayerInfo.AddCheatEntry(playerEquippedItemSlot, CheatList.EQUIPPED_ITEM_SLOT);
@@ -288,7 +278,6 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             groupFlags.AddCheatEntry(hasQuiver, CheatList.FLAG_QUIVER);
             groupFlags.AddCheatEntry(hasOilLamp, CheatList.FLAG_OIL_LAMP);
 
-
             // Inventory Navigation Flags
             Cheat enableFoodBagMovement = new Cheat("CanNavigateInventory (Food Bag)", slot2Quantity, 0x220 + (-0x80 * 2) + 0x310 + 0x7D0, VarType.DOUBLE);
             groupFlags.AddCheatEntry(enableFoodBagMovement, CheatList.FLAG_INVENTORY_NAVIGATION_FOOD);
@@ -311,7 +300,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             // Primary Inventory Slots
             InventorySlot[] primaryInventorySlots = new InventorySlot[TotalPrimaryInventorySlots];
 
-            int slotOffsetCount = 1 + NegInventoryEntries;
+            int slotOffsetCount = 1 + NegativeInventoryEntries;
             int offset = 0x80 * slotOffsetCount; // i = 0
 
             for (var i = 0; i < primaryInventorySlots.Length; i++)
@@ -365,9 +354,8 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             inventoryCodesCounter++;
             inventoryGroupsCounter++;
 
-
             // Treasure Bag Inventory Slots
-            InventorySlot[] treasureInventorySlots = new InventorySlot[numTreasureInventorySlots];
+            InventorySlot[] treasureInventorySlots = new InventorySlot[TreasureInventorySlots];
 
             offset = 0x6F0;
 
@@ -383,9 +371,8 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             }
             inventoryGroupsCounter++;
 
-
             // Food Bag Inventory Slots
-            InventorySlot[] foodInventorySlots = new InventorySlot[numFoodInventorySlots];
+            InventorySlot[] foodInventorySlots = new InventorySlot[FoodInventorySlots];
 
             offset = 0xD40;
 
@@ -402,7 +389,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             inventoryGroupsCounter++;
 
             // Bomb Bag Inventory Slot
-            InventorySlot[] bombInventorySlots = new InventorySlot[numBombInventorySlots];
+            InventorySlot[] bombInventorySlots = new InventorySlot[BombInventorySlots];
 
             offset = 0xAD0;
 
@@ -419,7 +406,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             inventoryGroupsCounter++;
 
             // Pendant Bag Inventory Slot
-            InventorySlot[] pendantInventorySlots = new InventorySlot[numPendantInventorySlots];
+            InventorySlot[] pendantInventorySlots = new InventorySlot[PendantInventorySlots];
 
             offset = 0x960;
 
@@ -436,7 +423,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             inventoryGroupsCounter++;
 
             // Equipment Inventory Slot
-            InventorySlot[] equipmentInventorySlots = new InventorySlot[numEquipmentInventorySlots];
+            InventorySlot[] equipmentInventorySlots = new InventorySlot[EquipmentInventorySlots];
 
             offset = 0x1130;
 
@@ -452,17 +439,16 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             }
             inventoryGroupsCounter++;
 
-
         }
 
         public static int GetXmlID()
         {
-            return s_xmlID;
+            return XmlID;
         }
 
         public static void IncrementXmlID()
         {
-            s_xmlID++;
+            XmlID++;
         }
 
         public CheatGroup GetCheatTree()
@@ -487,12 +473,12 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
 
         public static int GetGroupCount()
         {
-            return s_groupCount;
+            return GroupCount;
         }
 
         public static void IncrementGroupCount()
         {
-            s_groupCount++;
+            GroupCount++;
         }
     }
 }

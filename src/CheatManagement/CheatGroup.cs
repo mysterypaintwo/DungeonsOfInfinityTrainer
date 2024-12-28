@@ -1,7 +1,4 @@
 ﻿using System.Collections.Generic;
-using System;
-using System.Drawing.Text;
-using System.Linq;
 
 namespace DungeonsOfInfinityTrainer.CheatManagement
 {
@@ -9,9 +6,9 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
 
     public class CheatGroup
     {
-        private Dictionary<CheatManager.CheatList, Cheat> _cheatDict = new Dictionary<CheatManager.CheatList, Cheat>();
+        private Dictionary<CheatManager.CheatList, Cheat> _cheatLookup = new Dictionary<CheatManager.CheatList, Cheat>();
         private readonly int _xmlID = 0;
-        List<Cheat> _cheatEntries;
+        List<Cheat> _cheatList;
         private string _groupDescription;
         private int _groupID = 1;
         private readonly List<CheatGroup> _childGroups = new List<CheatGroup>();
@@ -27,15 +24,15 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
 
             _xmlID = CheatManager.GetXmlID();
             CheatManager.IncrementXmlID();
-            _cheatEntries = new List<Cheat>();
+            _cheatList = new List<Cheat>();
         }
 
         internal void AddCheatEntry(Cheat cheat, CheatManager.CheatList cheatEntry)
         {
-            _cheatEntries.Add(cheat);
+            _cheatList.Add(cheat);
             if (cheatEntry == CheatManager.CheatList.UNDEFINED)
                 return;
-            _cheatDict.Add(cheatEntry, cheat);
+            _cheatLookup.Add(cheatEntry, cheat);
         }
 
         public List<Cheat> GetCheatEntry(CheatManager.CheatList cheatEntry)
@@ -43,16 +40,16 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             List<Cheat> returnedCheats = new List<Cheat>();
             if (cheatEntry >= CheatManager.CheatList.INV_SLOTS_BEGIN)
             {
-                returnedCheats.Add(_cheatDict[cheatEntry]);
-                int chIndex = _cheatEntries.IndexOf(_cheatDict[cheatEntry]);
-                returnedCheats.Add(_cheatEntries[chIndex + 1]);
-                returnedCheats.Add(_cheatEntries[chIndex + 2]);
-                returnedCheats.Add(_cheatEntries[chIndex + 3]);
-                returnedCheats.Add(_cheatEntries[chIndex + 4]);
+                returnedCheats.Add(_cheatLookup[cheatEntry]);
+                int chIndex = _cheatList.IndexOf(_cheatLookup[cheatEntry]);
+                returnedCheats.Add(_cheatList[chIndex + 1]);
+                returnedCheats.Add(_cheatList[chIndex + 2]);
+                returnedCheats.Add(_cheatList[chIndex + 3]);
+                returnedCheats.Add(_cheatList[chIndex + 4]);
             }
             else
             {
-                returnedCheats.Add(_cheatDict[cheatEntry]);
+                returnedCheats.Add(_cheatLookup[cheatEntry]);
             }
             return returnedCheats;
         }
@@ -104,7 +101,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             output.Add("<Options moHideChildren=\"1\"/>");
             output.Add(string.Format("<GroupHeader>1</GroupHeader>"));
 
-            if (_childGroups.Count > 0 || _cheatEntries.Count > 0)
+            if (_childGroups.Count > 0 || _cheatList.Count > 0)
             {
                 output.Add("<CheatEntries>");
 
@@ -116,9 +113,9 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
                     }
                 }
 
-                if (_cheatEntries.Count > 0)
+                if (_cheatList.Count > 0)
                 {
-                    foreach (Cheat c in _cheatEntries)
+                    foreach (Cheat c in _cheatList)
                     {
                         c.EmitCheat(output);
                     }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace DungeonsOfInfinityTrainer.CheatManagement
 {
@@ -24,7 +19,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
 
     public class Cheat
     {
-        public static string InvDropDown = @"-1:Empty
+        public static string InventoryDropdownLabel { get; set; } = @"-1:Empty
 0:Quiver
 1: Arrows
 2: Bag
@@ -83,7 +78,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
         private readonly string _cheatDescription;
         private readonly VarType _varType = VarType.UNDEFINED;
         private readonly List<Hotkey> _hotkeys = new List<Hotkey>();
-        private bool _dropdownCheat = false;
+        private bool _isDropdownCheat = false;
 
         public Cheat(string cheatDescription, Cheat parentCheat, int shiftedOffsetAmount, VarType varType)
         {
@@ -124,7 +119,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
 
         public void EnableInvDropdownList()
         {
-            _dropdownCheat = true;
+            _isDropdownCheat = true;
         }
 
         public Cheat(string cheatDescription, long baseAddress, VarType varType)
@@ -148,10 +143,10 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             output.Add(string.Format("<ID>{0}</ID>", _xmlID));
             output.Add(string.Format("<Description>\"{0}\"</Description>", _cheatDescription));
 
-            if (_dropdownCheat)
+            if (_isDropdownCheat)
             {
                 output.Add("<DropDownList ReadOnly=\"1\">");
-                output.Add(InvDropDown);
+                output.Add(InventoryDropdownLabel);
                 output.Add("</DropDownList>");
             }
             string varType = string.Empty;

@@ -48,12 +48,12 @@ namespace DungeonsOfInfinityTrainer
         public long BaseOffset = 0;
         public long AddrBaseOffset = 0;
 
-        private static readonly CheatManager s_CheatManager = new CheatManager();
-        private static readonly CheatGroup s_groupMaster = s_CheatManager.GetCheatTree();
-        private static readonly Mem s_mem = new Mem();
-        private static Cheat? s_currentCheat;
+        private static readonly CheatManager CheatManager = new CheatManager();
+        private static readonly CheatGroup GroupMaster = CheatManager.GetCheatTree();
+        private static readonly Mem Mem = new Mem();
+        private static Cheat? CurrentCheat;
 
-        private static bool s_processOpen = false;
+        private static bool ProcessOpen = false;
 
 
         public MainWindow()
@@ -61,11 +61,11 @@ namespace DungeonsOfInfinityTrainer
             InitializeComponent();
 
             // Open the game process
-            s_processOpen = s_mem.OpenProcess(ProcessName);
+            ProcessOpen = Mem.OpenProcess(ProcessName);
             Thread.Sleep(300);
 
             // Test Cheat Modification
-            if (s_processOpen) {
+            if (ProcessOpen) {
                 ProcessCheat(CheatManager.GroupList.G_PLAYER_INFO, CheatManager.CheatList.MAGIC, "64", "Write");
             }
             
@@ -75,8 +75,8 @@ namespace DungeonsOfInfinityTrainer
 
         private async void ClickHandler(object? sender, RoutedEventArgs e)
         {
-            CheatGroup groupMaster = s_CheatManager.GetCheatTree();
-            List<string> output = s_CheatManager.EmitAllCheats(groupMaster);
+            CheatGroup groupMaster = CheatManager.GetCheatTree();
+            List<string> output = CheatManager.EmitAllCheats(groupMaster);
             string fileName = string.Format("[v{0}] The Legend of Zelda - Dungeons of Infinity (v{1}).CT", GameVersion, CheatVersion);
             StreamWriter file = new StreamWriter(fileName);
             foreach (string s in output)
@@ -98,12 +98,12 @@ namespace DungeonsOfInfinityTrainer
 
         private string ProcessCheat(CheatManager.GroupList groupList, CheatManager.CheatList chosenCheat, string desiredValue, string desiredResult)
         {
-            CheatGroup GroupSub = s_groupMaster.GetChildGroup(groupList);
-            s_currentCheat = GroupSub.GetCheatEntry(chosenCheat)[0];
+            CheatGroup GroupSub = GroupMaster.GetChildGroup(groupList);
+            CurrentCheat = GroupSub.GetCheatEntry(chosenCheat)[0];
 
-            BaseOffset = s_currentCheat.GetBaseAddress();
-            List<int> tmpOffsets = s_currentCheat.GetAddressOffsets();
-            VarType tmpType = s_currentCheat.GetVarType();
+            BaseOffset = CurrentCheat.GetBaseAddress();
+            List<int> tmpOffsets = CurrentCheat.GetAddressOffsets();
+            VarType tmpType = CurrentCheat.GetVarType();
             string tmpTypeStr = string.Empty;
 
             string tmpAddrStr = "base+";
@@ -128,7 +128,7 @@ namespace DungeonsOfInfinityTrainer
             }
             if (desiredResult == "Write")
             {
-                s_mem.WriteMemory(tmpAddrStr, tmpTypeStr, desiredValue);
+                Mem.WriteMemory(tmpAddrStr, tmpTypeStr, desiredValue);
                 return null;
             }
             else if (desiredResult == "Read")
@@ -136,11 +136,11 @@ namespace DungeonsOfInfinityTrainer
                 switch (tmpType)
                 {
                     case VarType.FOUR_BYTE:
-                        return s_mem.ReadInt(tmpAddrStr).ToString();
+                        return Mem.ReadInt(tmpAddrStr).ToString();
                     case VarType.DOUBLE:
-                        return s_mem.ReadDouble(tmpAddrStr).ToString();
+                        return Mem.ReadDouble(tmpAddrStr).ToString();
                     case VarType.FLOAT:
-                        return s_mem.ReadFloat(tmpAddrStr).ToString();
+                        return Mem.ReadFloat(tmpAddrStr).ToString();
                     default:
                         return "N/A";
                 }

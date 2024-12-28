@@ -1,5 +1,4 @@
-﻿using System;
-using static DungeonsOfInfinityTrainer.CheatManagement.CheatManager;
+﻿using static DungeonsOfInfinityTrainer.CheatManagement.CheatManager;
 
 namespace DungeonsOfInfinityTrainer.CheatManagement
 {
