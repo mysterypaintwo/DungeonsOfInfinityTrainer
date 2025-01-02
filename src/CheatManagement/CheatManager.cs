@@ -191,14 +191,12 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             bombBagBombCount.AddOffset(0x188);
             bombBagBombCount.AddOffset(0x540);
 
-            /*
             // Arrow Count
             // v1.2.0
             Cheat arrowCount = new Cheat("Arrow Count", 0x016BC498, VarType.DOUBLE);
             arrowCount.AddOffset(0x288);
             arrowCount.AddOffset(0x8);
             arrowCount.AddOffset(0x0);
-            */
 
             // Inventory Slot 2 Item Quantity
             // v1.2.0
@@ -227,7 +225,7 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             Cheat playerMagic = new Cheat("Magic (Max: 64)", rupeesAddress, 0xD0, VarType.DOUBLE);
             groupPlayerInfo.AddCheatEntry(playerMagic, CheatList.MAGIC);
             groupPlayerInfo.AddCheatEntry(rupeesAddress, CheatList.RUPEES);
-            Cheat arrowCount = new Cheat("Arrow Count", rupeesAddress, -0x3BFA04B0, VarType.DOUBLE); // is also close to equippedtunic and ypos...
+            //Cheat arrowCount = new Cheat("Arrow Count", rupeesAddress, -0x3BFA04B0, VarType.DOUBLE); // is also close to equippedtunic and ypos... does not seem to work unfortunately
             groupPlayerInfo.AddCheatEntry(arrowCount, CheatList.ARROW_COUNT);
             Cheat playerKeyCount = new Cheat("Key Count", playerMaxHealth, -0x20, VarType.DOUBLE);
             groupPlayerInfo.AddCheatEntry(playerKeyCount, CheatList.KEY_COUNT);
