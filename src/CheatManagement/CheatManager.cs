@@ -121,14 +121,10 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             /// Define the skeleton cheats to base all the other codes off of
             // X-Position
             // Setup tree position is 944
-            // v1.2.0
-            Cheat xPosAddress = new Cheat("X-Pos (Ctrl + A/D to teleport)", 0x0144BB20, VarType.FLOAT);
-            xPosAddress.AddOffset(0x0);
-            xPosAddress.AddOffset(0x10);
-            xPosAddress.AddOffset(0xDA0);
+            // v1.2.1
+            Cheat xPosAddress = new Cheat("X-Pos (Ctrl + A/D to teleport)", 0x01364228, VarType.FLOAT);
+            xPosAddress.AddOffset(0xB10);
             xPosAddress.AddOffset(0x18);
-            xPosAddress.AddOffset(0x70);
-            xPosAddress.AddOffset(0x10);
             xPosAddress.AddOffset(0xF4);
             xPosAddress.AddHotkey(HotkeyActions.DEC_VAL, new List<int>() { 17, 65 }, 32);
             xPosAddress.AddHotkey(HotkeyActions.INC_VAL, new List<int>() { 17, 68 }, 32);
@@ -146,26 +142,24 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             */
 
             // Rupees
-            // v1.2.0
-            Cheat rupeesAddress = new Cheat("Rupees", 0x016B9660, VarType.DOUBLE);
-            rupeesAddress.AddOffset(0x188);
-            rupeesAddress.AddOffset(0x0);
-            rupeesAddress.AddOffset(0x3D0);
-            rupeesAddress.AddOffset(0x200);
+            // v1.2.1
+            Cheat rupeesAddress = new Cheat("Rupees", 0x016B8838, VarType.DOUBLE);
+            rupeesAddress.AddOffset(0x400); 
+            rupeesAddress.AddOffset(0x210);
 
             // Has Pendant of Health
-            // v1.2.0
-            Cheat hasPendantOfHealth = new Cheat("HasPendantOfHealth", 0x016BC2E0, VarType.DOUBLE);
+            // v1.2.1
+            Cheat hasPendantOfHealth = new Cheat("HasPendantOfHealth", 0x016BC598, VarType.DOUBLE);
             hasPendantOfHealth.AddOffset(0x248);
-            hasPendantOfHealth.AddOffset(0x50);
-            hasPendantOfHealth.AddOffset(0xC00);
+            hasPendantOfHealth.AddOffset(0x90);
+            hasPendantOfHealth.AddOffset(0xE80);
 
             // Has Master Key
-            // v1.2.0
-            Cheat hasMasterKey = new Cheat("HasMasterKey", 0x016BC468, VarType.DOUBLE);
-            hasMasterKey.AddOffset(0x388);
+            // v1.2.1
+            Cheat hasMasterKey = new Cheat("HasMasterKey", 0x016BC5A0, VarType.DOUBLE);
+            hasMasterKey.AddOffset(0x488);
             hasMasterKey.AddOffset(0x48);
-            hasMasterKey.AddOffset(0xE0);
+            hasMasterKey.AddOffset(0x90);
 
             // Has Moon Pearl
             Cheat hasMoonPearl = new Cheat("HasMoonPearl", hasMasterKey, 0x20, VarType.DOUBLE);
@@ -186,25 +180,26 @@ namespace DungeonsOfInfinityTrainer.CheatManagement
             Cheat hasFoodBag = new Cheat("HasFoodBag", hasMasterKey, 0x60, VarType.DOUBLE);
 
             // Bomb Bag Bomb Count
-            // v1.2.0
-            Cheat bombBagBombCount = new Cheat("Bomb Count (After Bomb Bag)", 0x01443A00, VarType.DOUBLE);
+            // v1.2.1
+            Cheat bombBagBombCount = new Cheat("Bomb Count (After Bomb Bag)", 0x016BC670, VarType.DOUBLE);
             bombBagBombCount.AddOffset(0x188);
-            bombBagBombCount.AddOffset(0x540);
+            bombBagBombCount.AddOffset(0x200);
 
             // Arrow Count
-            // v1.2.0
-            Cheat arrowCount = new Cheat("Arrow Count", 0x016BC498, VarType.DOUBLE);
-            arrowCount.AddOffset(0x288);
-            arrowCount.AddOffset(0x8);
+            // v1.2.1
+            Cheat arrowCount = new Cheat("Arrow Count", 0x016BC670, VarType.DOUBLE);
+            arrowCount.AddOffset(0x188);
+            arrowCount.AddOffset(0x108);
             arrowCount.AddOffset(0x0);
 
             // Inventory Slot 2 Item Quantity
-            // v1.2.0
-            Cheat slot2Quantity = new Cheat("Slot 2 Item Amount (Quantity)", 0x016BC0D8, VarType.DOUBLE);
-            slot2Quantity.AddOffset(0x320);
-            slot2Quantity.AddOffset(0x280);
-            slot2Quantity.AddOffset(0x240);
-            slot2Quantity.AddOffset(0xD0);
+            // v1.2.1
+            Cheat slot2Quantity = new Cheat("Slot 2 Item Amount (Quantity)", 0x016BC670, VarType.DOUBLE);
+            slot2Quantity.AddOffset(0x250);
+            slot2Quantity.AddOffset(0x248);
+            slot2Quantity.AddOffset(0x10);
+            slot2Quantity.AddOffset(0x50);
+            slot2Quantity.AddOffset(0x90);
 
             /// Generate all the other codes (and add the skeleton codes to the code list)
 

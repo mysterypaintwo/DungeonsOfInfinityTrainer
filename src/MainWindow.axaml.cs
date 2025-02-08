@@ -42,8 +42,8 @@ namespace DungeonsOfInfinityTrainer
             16|1076887552
         */
 
-        public const string GameVersion = "1.2.0";
-        public const string CheatVersion = "0.3";
+        public const string GameVersion = "1.2.1";
+        public const string CheatVersion = "0.1";
         public const string ProcessName = "Dungeons of Infinity";
         public long BaseOffset = 0;
         public long AddrBaseOffset = 0;
