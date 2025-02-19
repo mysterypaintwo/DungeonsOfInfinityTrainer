@@ -21,11 +21,15 @@
 5. Use the trainer's interface to activate the desired cheats.
 
 ### Cheat Engine Tables
-**The source in its current state is only designed to generate cheats: just use Cheat Engine for the time being.**
+**The source in its current state is only designed to generate cheats: just use the Cheat Engine table for the time being.**
 
-For those who prefer using Cheat Engine, we also offer pre-made cheat tables for the game. You can download them from the following link:
+You can download the CT tables from the following link:
 
 **[Cheat Engine Tables - Google Drive](https://drive.google.com/drive/folders/1NsLZ3-3mz802lZrgo07kzkma4dE08zHY)**
+
+Get Cheat Engine too if you don't use it already (reject/decline any other things it asks you to install!)
+
+https://www.cheatengine.org/downloads.php
 
 These tables offer similar functionality to the trainer and are regularly updated to match the latest game versions.
 
