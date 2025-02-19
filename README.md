@@ -1,6 +1,6 @@
 # Dungeons of Infinity Trainer
 
-## [⬇️ **Download the Trainer Here** ⬇️](https://github.com/Thetanburrito/Dungeons_of_Infinity_Trainer/releases)
+## [⬇️ **Download the Trainer Here** ⬇️](https://github.com/mysterypaintwo/DungeonsOfInfinityTrainer?tab=readme-ov-file#cheat-engine-tables)
 
 ---
 
@@ -14,13 +14,15 @@
 - **Teleportation**: Instantly move to different locations within a dungeon using Ctrl + WASD.
 
 ### Getting Started
-1. Download the trainer from the [⬇️ **Download Link** ⬇️](https://github.com/Thetanburrito/Dungeons_of_Infinity_Trainer/releases).
+1. Download the trainer from the [⬇️ **Download Link** ⬇️](https://github.com/mysterypaintwo/DungeonsOfInfinityTrainer?tab=readme-ov-file#cheat-engine-tables)
 2. Extract the downloaded files and ensure that `memory.dll` is present in the same folder as the trainer executable.
 3. Run `DungeonsOfInfinityTrainer.exe` as an administrator.
 4. Launch the game, **Dungeons of Infinity**.
 5. Use the trainer's interface to activate the desired cheats.
 
 ### Cheat Engine Tables
+**The source in its current state is only designed to generate cheats: just use Cheat Engine for the time being.**
+
 For those who prefer using Cheat Engine, we also offer pre-made cheat tables for the game. You can download them from the following link:
 
 **[Cheat Engine Tables - Google Drive](https://drive.google.com/drive/folders/1NsLZ3-3mz802lZrgo07kzkma4dE08zHY)**
